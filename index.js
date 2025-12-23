@@ -52,7 +52,7 @@ app.use(cors({
       cb(null, true);
     } else {
       console.log("Blocked by CORS:", origin); 
-      callback(new Error('Not allowed by CORS'));
+      cb(new Error('Not allowed by CORS'));
     }
   },
   credentials: true // ده أهم حاجة للـ cookies!
