@@ -41,7 +41,7 @@ const connectDB = async () => {
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
-  'https://gemsy-frontend.vercel.app/places',
+  'https://gemsy-frontend.vercel.app',
   process.env.FRONTEND_URL, // حط الـ frontend URL هنا
 ].filter(Boolean);
 
