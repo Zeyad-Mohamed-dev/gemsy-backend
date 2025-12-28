@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import http from "http";
+import { initSocket } from "./realtime/socket.js";
 import { globalMiddleWare } from "./middleware/globalMiddleWare.js";
 import authRouter from "./route/auth.route.js";
 import userRouter from "./route/user.route.js";
@@ -92,5 +94,9 @@ export default async function handler(req, res) {
 if (process.env.NODE_ENV !== "production") {
   await connectDB();
   const port = process.env.PORT || 3000;
-  app.listen(port, () => console.log(`🚀 Local server running on port ${port}`));
+  const server = http.createServer(app);
+
+  initSocket(server);
+
+  server.listen(port, () => console.log(`🚀 Local server running on port ${port}`));
 }

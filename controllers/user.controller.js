@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import { ApiFeatures } from "../utils/ApiFeatures.js";
 import { uploadToCloudinary } from "../middleware/cloudinaryConfig.js"; 
 import { getUserById } from "../repository/user.repo.js";    
+import { getIo } from "../realtime/socket.js";
 
 const createUser = catchAsyncError(async (req, res, next) => {
   let isExist = await userModel.findOne({ email: req.body.email });
@@ -166,8 +167,16 @@ const increaseUserPointsHelper = async (userId, points = 10) => {
 
     user.points += points;
     await user.save();
-
+    const io = getIo();
+    if(io) {
+      console.log("Updating user with the id " + userId);
+      io.to(userId.toString()).emit("pointsUpdated", {newPoints: user.points});
+    }
+    else {
+      console.log("Real time failed");
+    }
     return user;
+    
   } catch (error) {
     throw new AppError(error.message, 400);
   }

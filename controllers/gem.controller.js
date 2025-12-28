@@ -164,6 +164,7 @@ const changeGemStatus = catchAsyncError(async (req, res, next) => {
       : result.createdBy;
     if (status === "accepted" && result.status !== "accepted") {
       if (userId) {
+        console.log("Adding points for changing status by the admin");
         await increaseUserPointsHelper(userId, 10);
       }
     }
@@ -210,9 +211,10 @@ Discounts: Free ${result.discount}%, Gold ${result.discountGold}%, Platinum ${re
   result.embeddings = await createEmbeddings(embeddingText);
   await result.save();
 
-   if (status === "accepted") {
-     await increaseUserPointsHelper(req.user._id, 10);
-   }
+  //  if (status === "accepted" && req.user.role === "user") {
+  //     console.log("Points increased for user creating gem");
+  //     await increaseUserPointsHelper(req.user._id, 10);
+  //   }
 
   if (status === "accepted") {
     res.status(200).json({ message: "Gem created successfully", result });
