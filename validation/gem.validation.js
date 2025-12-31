@@ -22,6 +22,9 @@ export const gemSchema = Joi.object({
   status: Joi.string().valid("pending", "rejected", "accepted").optional(),
   avgRating: Joi.number().min(0).max(5).optional(),
   isSubscribed: Joi.boolean().optional(),
+  lat: Joi.number().required(),
+  lng: Joi.number().required(),
+
 });
 
 export const gemUpdateSchema = Joi.object({

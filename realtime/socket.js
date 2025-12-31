@@ -24,8 +24,7 @@ export function initSocket(server) {
     }
     else {
       console.log("User did not provide an id");
-    }
-    
+    }    
     // socket.on("joinRoom", (room) => {
     //   socket.join(room);
     //   socket.emit("joined", room);

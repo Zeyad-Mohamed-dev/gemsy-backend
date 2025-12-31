@@ -176,8 +176,13 @@ const changeGemStatus = catchAsyncError(async (req, res, next) => {
   });
 });
 const createGem = catchAsyncError(async (req, res, next) => {
+  // clg("Creating gem with data:", req.body);
+  console.log("Creating gem with data:", req.body);
   let isExist = await findGemByName(req.body.name);
-  if (isExist) return next(new AppError(`Gem already exists`, 400));
+  if (isExist) {
+    console.log("Created error already exist");
+    return next(new AppError(`Gem already exists`, 400))
+  };
 
   let status = "pending";
   if (req.user.role === "admin") {
@@ -186,14 +191,16 @@ const createGem = catchAsyncError(async (req, res, next) => {
 
   let uploadedImages = [];
   if (req.files?.images && req.files.images.length > 0) {
-    for (const file of req.files.images) {
-      const cloudinaryResult = await uploadToCloudinary(file.buffer, "gems");
-      uploadedImages.push(cloudinaryResult.secure_url);
-    }
+    //parallel upload of the images to cloudinary
+    const cloudinaryPromise = req.files.images.map((file) => uploadToCloudinary(file.buffer, "gems"));
+    const results = await Promise.all(cloudinaryPromise);
+    uploadedImages = results.map(r => r.secure_url);
   }
 
   let gemData = {
     ...req.body,
+    latitude: parseFloat(req.body.lat),
+    longitude: parseFloat(req.body.lng),
     images: uploadedImages,
     status: status,
     createdBy: req.user._id,
@@ -211,10 +218,6 @@ Discounts: Free ${result.discount}%, Gold ${result.discountGold}%, Platinum ${re
   result.embeddings = await createEmbeddings(embeddingText);
   await result.save();
 
-  //  if (status === "accepted" && req.user.role === "user") {
-  //     console.log("Points increased for user creating gem");
-  //     await increaseUserPointsHelper(req.user._id, 10);
-  //   }
 
   if (status === "accepted") {
     res.status(200).json({ message: "Gem created successfully", result });

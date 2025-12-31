@@ -4,6 +4,8 @@ const gemSchema = new mongoose.Schema({
   name: { type: String, required: true },
   images: [{ type: String }],
   gemLocation: { type: String, required: true },
+  latitude : { type: Number, required: true},
+  longitude : { type: Number, required: true},
   gemPhone: { type: String, required: true },
 
   description: { type: String, required: true },
