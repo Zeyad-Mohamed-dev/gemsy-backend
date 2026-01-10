@@ -98,5 +98,5 @@ if (process.env.NODE_ENV !== "production") {
 
   initSocket(server);
 
-  server.listen(port, () => console.log(`🚀 Local server running on port ${port}`));
+  server.listen(port, "0.0.0.0" ,() => console.log(`🚀 Local server running on port ${port}`));
 }
