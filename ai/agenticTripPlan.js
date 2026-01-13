@@ -58,6 +58,7 @@ const findOutSidePlacesTool = tool(
 );
 
 export const agenticMode = async (query) => {
+    //commit comment
   const model = new ChatGroq({
     apiKey: process.env.GROQ_KEY,
     model: "meta-llama/llama-4-scout-17b-16e-instruct",
