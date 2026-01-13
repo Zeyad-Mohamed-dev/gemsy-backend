@@ -35,7 +35,6 @@ const gemSchema = new mongoose.Schema({
   embeddings: {
     type: [Number],    
     required: false,  
-    default: []
   },
   visitsCount: {
     type: Number,

@@ -1,3 +1,4 @@
+import { agenticMode } from "../ai/agenticTripPlan.js";
 import { cosineSimilarity, createEmbeddings, enhancePrompt } from "../ai/createEmbeddings.js";
 import { catchAsyncError } from "../middleware/catchAsyncError.js";
 import { getGemsPromise } from "../repository/gem.repo.js";
@@ -34,6 +35,12 @@ const generateSuggestions = catchAsyncError(async (req, res, next) => {
     });
 })
 
+const generateAgenticSuggestions = catchAsyncError(async (req, res, next) => {
+  const query = req.body.prompt;
+  const result = await agenticMode(query);
+  return res.status(200).json(result);
+})
 export {
     generateSuggestions, 
+    generateAgenticSuggestions
 }

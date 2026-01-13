@@ -53,6 +53,34 @@ const findGemByName = async (name) => {
   return await gemModel.findOne({ name: name });
 };
 
+export const searchEmbeddings = async ({
+  queryEmbeddings,
+  limit = 3
+}) => {
+  if (!Array.isArray(queryEmbeddings)) {
+    throw new Error("queryEmbeddings must be an array");
+  }
+
+  return gemModel.aggregate([
+    {
+      $vectorSearch: {
+        index: "embedding_index", // Atlas index name
+        path: "embeddings",       // field in schema
+        queryVector: queryEmbeddings,
+        numCandidates: limit * 20,
+        limit
+      }
+    },
+    {
+      $project: {
+        name: 1,
+        gemLocation: 1,
+        description: 1,
+        score: { $meta: "vectorSearchScore" }
+      }
+    }
+  ]);
+};
 export {
   getGemsPromise,
   getGemsQuery,
