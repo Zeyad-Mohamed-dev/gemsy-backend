@@ -91,11 +91,16 @@ export default async function handler(req, res) {
   return app(req, res);
 }
 
+export default async function handler(req, res) {
+  await connectDB();
+  return app(req, res);
+}
 
+// Only start the HTTP server when running locally
+if (process.env.NODE_ENV !== 'production') {
   await connectDB();
   const port = process.env.PORT || 3000;
   const server = http.createServer(app);
-
   initSocket(server);
-
-  server.listen(port, "0.0.0.0" ,() => console.log(`🚀 Local server running on port ${port}`));
+  server.listen(port, "0.0.0.0", () => console.log(`🚀 Local server running on port ${port}`));
+}
