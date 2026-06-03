@@ -36,6 +36,7 @@ const connectDB = async () => {
     console.log("✅ DB Connected");
   } catch (err) {
     console.error("❌ DB Connection Failed:", err);
+    return;
   }
 };
 
@@ -43,6 +44,7 @@ const connectDB = async () => {
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
+  'https://gemsy-frontend.vercel.app/',
   'https://gemsy-frontend.vercel.app',
   process.env.FRONTEND_URL, // حط الـ frontend URL هنا
 ].filter(Boolean);
@@ -86,10 +88,6 @@ app.use("/transaction", transactionRouter);
 
 app.use(globalMiddleWare);
 
-export default async function handler(req, res) {
-  await connectDB();
-  return app(req, res);
-}
 
 export default async function handler(req, res) {
   await connectDB();
